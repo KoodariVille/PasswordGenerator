@@ -1,17 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static System.Console;
-using static System.Security.Cryptography.RNGCryptoServiceProvider;
 using System.Security.Cryptography;
 
 namespace PasswordGenerator
 {
     class Program
     {
-        private static RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+        //characters that are used in generating password
+        static readonly char[] AvailableCharacters = {
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
+         };
 
         static void Main(string[] args)
         {
@@ -23,7 +25,7 @@ namespace PasswordGenerator
 
             if (input)
             {
-                //calling print/passwordgenerator
+                //calling print method
                 PasswordPrint(num);
             }
             else
@@ -47,7 +49,7 @@ namespace PasswordGenerator
                 //loop for printing password given amount
                 for (int i = 0; i < num; i++)
                 {
-                    WriteLine(RandomPassword(length));
+                    WriteLine(GeneratePassword(length));                                  
                 }
             }
             else
@@ -56,12 +58,26 @@ namespace PasswordGenerator
             }
         }
 
-        public static byte RandomPassword(int length)
+        internal static string GeneratePassword(int length)
         {
-            byte[] randomNumber = new byte[1];
-            rngCsp.GetBytes(randomNumber);
+            //creating char and byte tables with lengths as parameter
+            char[] identifier = new char[length];
+            byte[] randomData = new byte[length];
 
-            return (byte)(randomNumber[0]);
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(randomData);
+            }
+
+            //generating random possible choises from available characters one by one for the given length
+            for (int idx = 0; idx < identifier.Length; idx++)
+            {
+                int pos = randomData[idx] % AvailableCharacters.Length;
+                identifier[idx] = AvailableCharacters[pos];
+            }
+
+            //returning generated password
+            return new string(identifier);
         }
     }
 }
