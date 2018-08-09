@@ -4,11 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Console;
+using static System.Security.Cryptography.RNGCryptoServiceProvider;
+using System.Security.Cryptography;
 
 namespace PasswordGenerator
 {
     class Program
     {
+        private static RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+
         static void Main(string[] args)
         {
             int num;
@@ -24,9 +28,10 @@ namespace PasswordGenerator
             }
             else
             {
-                //if input isn´t suitable respond is given
-                WriteLine("Wrong type of input.");
+                throw new ArgumentException("Wrong type of input input.");//if input isn´t suitable respond is given
             }
+
+            ReadKey();
         }
 
         //method for printing passwords
@@ -47,18 +52,16 @@ namespace PasswordGenerator
             }
             else
             {
-                //if input isn´t suitable respond is given
-                WriteLine("Wrong type of input.");
+                throw new ArgumentException("Wrong type of input input.");//if input isn´t suitable respond is given
             }
         }
 
-        static string RandomPassword(int length)
+        public static byte RandomPassword(int length)
         {
-            Random random = new Random();
-            const string pool = "abcdefghijklmnopqrstuvwxyz0123456789";
-            var chars = Enumerable.Range(0, length)
-                .Select(x => pool[random.Next(0, pool.Length)]);
-            return new string(chars.ToArray());
+            byte[] randomNumber = new byte[1];
+            rngCsp.GetBytes(randomNumber);
+
+            return (byte)(randomNumber[0]);
         }
     }
 }
