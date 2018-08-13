@@ -36,10 +36,11 @@ namespace PasswordGenerator
             ReadKey();
         }
 
-        //method for printing passwords
+        //method for printing passwords to txt file
         static void PasswordPrint(int num)
         {
             int length; //password length
+            string[] passwords = new string [num]; //array where we collect passwords before writing
 
             Write("Give password length: ");
             bool input = int.TryParse(ReadLine(), out length);
@@ -49,8 +50,11 @@ namespace PasswordGenerator
                 //loop for printing password given amount
                 for (int i = 0; i < num; i++)
                 {
-                    WriteLine(GeneratePassword(length));                                  
+                    passwords[i] += GeneratePassword(length);                                  
                 }
+                //writing passwords to txt file
+                System.IO.File.WriteAllLines(@"F:\WriteLines.txt", passwords);
+                WriteLine("Passwords have been generated.");
             }
             else
             {
