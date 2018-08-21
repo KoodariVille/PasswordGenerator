@@ -40,6 +40,7 @@ namespace PasswordGenerator
         static void PasswordPrint(int num)
         {
             int length; //password length
+            const string path = @"C:\temp\passlist.txt"; //file destination
             string[] passwords = new string [num]; //array where we collect passwords before writing
 
             Write("Give password length: ");
@@ -52,8 +53,9 @@ namespace PasswordGenerator
                 {
                     passwords[i] += GeneratePassword(length);                                  
                 }
+              
                 //writing passwords to txt file
-                System.IO.File.WriteAllLines(@"F:\WriteLines.txt", passwords);
+                System.IO.File.WriteAllLines(path, passwords);
                 WriteLine("Passwords have been generated.");
             }
             else
